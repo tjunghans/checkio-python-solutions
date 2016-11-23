@@ -1,30 +1,21 @@
 #!/usr/bin/python
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
 
-def ok(expression, expected):
-    if expression == expected:
-        print bcolors.OKGREEN +  "Pass" + bcolors.ENDC
-    else:
-        print bcolors.FAIL +  "Fail" + bcolors.ENDC
+import myassert
 
 
 def min(arg1, *args, **kwargs):
     modifier = None
     for key in kwargs:
-        modifier = key
+        modifier = kwargs[key]
     if type(arg1) is str:
         items = list(arg1)
+    elif type(arg1) is list:
+        items = arg1
     else:
         items = [arg1]
+
     minArg = items[0]
+
     for arg in args:
         items.append(arg)
     for x in items:
@@ -36,12 +27,13 @@ def min(arg1, *args, **kwargs):
                 minArg = x
     return minArg
 
-ok(min(2,3), 2)
-ok(min(3,3), 3)
-ok(min(4,3), 3)
-ok(min(5,4,3), 3)
-ok(min('hello'), 'e')
-ok(min([[1,2], [3, 4], [9, 0]], key=lambda x: x[1]), [9, 0])
+myassert.ok(min(2,3), 2)
+myassert.ok(min(3,3), 3)
+myassert.ok(min(4,3), 3)
+myassert.ok(min(5,4,3), 3)
+myassert.ok(min('hello'), 'e')
+myassert.ok(min(2.2, 5.6, 5.9, key=int), 5.6, "Two maximal items")
+myassert.ok(min([[1, 2], [3, 4], [9, 0]], key=lambda x: x[1]), [9, 0])
 
 
 def max(arg1, *args, **keys):
@@ -57,8 +49,8 @@ def max(arg1, *args, **keys):
             maxArg = x
     return maxArg
 
-ok(max(2,3), 3)
-ok(max(3,3), 3)
-ok(max(4,3), 4)
-ok(max(3,4,5), 5)
-ok(max('hello'), 'o')
+myassert.ok(max(2,3), 3)
+myassert.ok(max(3,3), 3)
+myassert.ok(max(4,3), 4)
+myassert.ok(max(3,4,5), 5)
+myassert.ok(max('hello'), 'o')
