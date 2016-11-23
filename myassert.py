@@ -16,6 +16,8 @@ def ok(expression, expected, *args):
         message = ' ' + args[0]
 
     if expression == expected:
-        print bcolors.OKGREEN +  "Pass" + bcolors.ENDC
+        print bcolors.OKGREEN +  'Pass' + bcolors.ENDC
     else:
-        print bcolors.FAIL +  "Fail" + message + bcolors.ENDC
+        print bcolors.FAIL +  'Fail:' \
+            + ' is ' + str(expression) + ', should be ' + str(expected) \
+            + message + bcolors.ENDC

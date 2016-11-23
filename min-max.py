@@ -3,54 +3,65 @@
 import myassert
 
 
-def min(arg1, *args, **kwargs):
-    modifier = None
-    for key in kwargs:
-        modifier = kwargs[key]
-    if type(arg1) is str:
-        items = list(arg1)
+def minmax(min, arg1, *args, **kwargs):
+
+    key = kwargs.get("key", None)
+    if type(arg1) is int or type(arg1) is float:
+        items = [arg1]
     elif type(arg1) is list:
         items = arg1
+    elif type(arg1) is bool:
+        items = [int(arg1)]
     else:
-        items = [arg1]
+        items = list(arg1)
 
-    minArg = items[0]
+    if len(args) > 0 and type(args[0]) is list:
+        items = [items]
+
+    res = items[0]
 
     for arg in args:
         items.append(arg)
+
     for x in items:
-        if modifier:
-            if modifier(x) < modifier(minArg):
-                minArg = x
+        if key:
+            if (min and key(x) < key(res)) or (not min and key(x) > key(res)):
+                res = x
         else:
-            if x < minArg:
-                minArg = x
-    return minArg
+            if (min and x < res) or (not min and x > res):
+                res = x
+
+    return res
+
+
+def min(arg1, *args, **kwargs):
+    return minmax(True, arg1, *args, **kwargs)
+
+
+def max(arg1, *args, **kwargs):
+    return minmax(False, arg1, *args, **kwargs)
 
 myassert.ok(min(2,3), 2)
 myassert.ok(min(3,3), 3)
 myassert.ok(min(4,3), 3)
 myassert.ok(min(5,4,3), 3)
 myassert.ok(min('hello'), 'e')
-myassert.ok(min(2.2, 5.6, 5.9, key=int), 5.6, "Two maximal items")
+myassert.ok(min(2.2, 5.6, 5.9, key=int), 2.2, "One minimal items")
 myassert.ok(min([[1, 2], [3, 4], [9, 0]], key=lambda x: x[1]), [9, 0])
-
-
-def max(arg1, *args, **keys):
-    if type(arg1) is str:
-        items = list(arg1)
-    else:
-        items = [arg1]
-    maxArg = items[0]
-    for arg in args:
-        items.append(arg)
-    for x in items:
-        if x > maxArg:
-            maxArg = x
-    return maxArg
+myassert.ok(min(abs(i) for i in range(-10, 10)), 0, 'should be 0')
+myassert.ok(min((9,)), 9, 'should be 9')
+myassert.ok(min([1, 2, 3], [5, 6], [7], [0, 0, 0, 10], key=sum), [1, 2, 3])
+myassert.ok(min(True, False, -1, key=lambda x: not x), True)
 
 myassert.ok(max(2,3), 3)
 myassert.ok(max(3,3), 3)
 myassert.ok(max(4,3), 4)
 myassert.ok(max(3,4,5), 5)
 myassert.ok(max('hello'), 'o')
+myassert.ok(max(2.2, 5.6, 5.9, key=int), 5.6, "Two maximal items")
+myassert.ok(max([[1, 2], [3, 4], [9, 0]], key=lambda x: x[1]), [3, 4])
+myassert.ok(max(range(6)), 5)
+myassert.ok(max(abs(i) for i in range(-10, 10)), 10)
+myassert.ok(max((9,)), 9, 'should be 9')
+myassert.ok(max([1, 2, 3], [5, 6], [7], [0, 0, 0, 10], key=sum), [5, 6])
+myassert.ok(max(True, False, -1, key=lambda x: not x), False)
