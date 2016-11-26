@@ -41,6 +41,9 @@ def min(arg1, *args, **kwargs):
 def max(arg1, *args, **kwargs):
     return minmax(False, arg1, *args, **kwargs)
 
+
+"""Test Cases."""
+
 myassert.ok(min(2,3), 2)
 myassert.ok(min(3,3), 3)
 myassert.ok(min(4,3), 3)

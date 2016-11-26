@@ -1,9 +1,11 @@
 #!/usr/bin/python
 
 import math
+import myassert
+
 
 def checkio(num):
-    digits = [];
+    digits = []
     while num > 0:
         digits.append(num % 10)
         num = int(math.floor(num / 10))
@@ -20,7 +22,10 @@ def checkio(num):
     for d in digits:
         if d > 0:
             roman.append(numerals[i][d - 1])
-        i = i + 1
+        i += 1
     return ''.join(reversed(roman))
 
-print checkio(3999) # MMMCMXCIX
+
+"""Test Cases."""
+
+myassert.ok(checkio(3999), "MMMCMXCIX")
